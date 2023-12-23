@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <script style="text/javascript">
+
+      window.TrelloPowerUp.initialize({
+        "card-buttons": function (t, opts) {
+          return [
+            {
+              icon      : "https://www.svgrepo.com/show/504277/discord.svg",
+              text      : "Discord",
+              condition : "edit",
+              callback  : function (t) {
+                return t.popup({
+                  title : "Discord",
+                  url   : "modal.html",
+                });
+              },
+            },
+          ];
+        },
+      });
+      
+    </script>
+  </body>
+</html>
