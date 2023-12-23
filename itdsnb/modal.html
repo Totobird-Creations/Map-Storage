@@ -16,7 +16,7 @@
     </style>
   </head>
   <body>
-    <p id="info"></p>
+    <p id="info">Loading...</p>
     <button disabled class="mod-primary btn-normal" id="btn-accept">Accept</button>
     <br>
     <button disabled class="mod-danger btn-normal" id="btn-reject">Reject</button>
@@ -41,7 +41,7 @@
           for (var i = 0; i < buttons.length; i++) {
             buttons[i].setAttribute("disabled", "disabled");
           }
-          document.getElementById("info").innerHTML = "Loading...";
+          document.getElementById("info").innerText = "Loading...";
         } else {for (var i = 0; i < buttons.length; i++) {
           buttons[i].removeAttribute("disabled");
         }}
