@@ -36,10 +36,10 @@
             buttons[i].setAttribute("disabled", "disabled");
           }
           buttons = document.getElementsByClassName("btn-invert");
-          document.getElementById("info").innerHTML = "Loading...";
           for (var i = 0; i < buttons.length; i++) {
             buttons[i].setAttribute("disabled", "disabled");
           }
+          document.getElementById("info").innerHTML = "Loading...";
         } else {for (var i = 0; i < buttons.length; i++) {
           buttons[i].removeAttribute("disabled");
         }}
@@ -51,7 +51,7 @@
           if ((/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(data["desc"]) !== null) {
             t.get("card", "shared", "itdsnb_handled").then((value) => {
               if (value === undefined) {
-                document.getElementById("info").innerHTML = "";
+                document.getElementById("info").innerHTML = "This thread is <strong>open</strong>";
                 setDisabled(false);
               } else {
                 document.getElementById("info").innerHTML = "This thread has been <strong>" + value + "</strong>";
