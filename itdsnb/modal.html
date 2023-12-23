@@ -28,6 +28,7 @@
     <button disabled class="btn-invert" id="btn-reopen">Reopen</button>
     <p><br></p>
     <script>
+      alert("A");
       const t = window.TrelloPowerUp.iframe();
       function setDisabled(disabled) {
         var buttons = document.getElementsByClassName("btn-normal");
@@ -37,7 +38,7 @@
           buttons[i].removeAttribute("disabled");
         }}
       }
-      alert("DEBUG");
+      alert("B");
       t.card("desc").then((data) => {
         alert(data["desc"]);
         if ((/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(data["desc"]) !== null) {
