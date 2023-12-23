@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <link rel="stylesheet" href="https://p.trellocdn.com/power-up.css" />
+    <style>
+      html, body {
+        overflow-x : clip;
+      }
+      button {
+        width : 100%
+      }
+      #info {
+        text-align : center;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="info"></p>
+    <button disabled class="mod-primary btn-normal" id="btn-accept">Accept</button>
+    <br>
+    <button disabled class="mod-danger btn-normal" id="btn-reject">Reject</button>
+    <br>
+    <button disabled class="btn-normal" id="btn-duplicate">Duplicate</button>
+    <br>
+    <button disabled class="btn-normal" id="btn-bad-format">Bad Format</button>
+    <br>
+    <button disabled class="btn-invert" id="btn-reopen">Reopen</button>
+    <p><br></p>
+    <script>
+      const t = window.TrelloPowerUp.iframe();
+      function setDisabled(disabled) {
+        var buttons = document.getElementsByClassName("btn-normal");
+        if (disabled) {for (var i = 0; i < buttons.length; i++) {
+          buttons[i].setAttribute("disabled", "disabled");
+        }} else {for (var i = 0; i < buttons.length; i++) {
+          buttons[i].removeAttribute("disabled");
+        }}
+      }
+      t.card("desc").then((data) => {
+        if ((/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(data["desc"]) !== null) {
+          t.get("card", "shared", "itdsnb_handled").then((value) => {
+            if (value === undefined) {
+              setDisabled(false);
+            } else {
+              document.getElementById("info").innerHTML = "This thread has been <strong>" + value + "</strong>";
+              var buttons = document.getElementsByClassName("btn-invert");
+              for (var i = 0; i < buttons.length; i++) {
+                buttons[i].removeAttribute("disabled");
+              }
+            }
+          });
+        }
+      });
+      function clicked(action, archive, moveToTodo, removeCardTag) {
+        setDisabled(true);
+        var req;
+        if (removeCardTag) {
+          req = t.remove("card", "shared", "itdsnb_handled");
+        } else {
+          req = t.set("card", "shared", "itdsnb_handled", action);
+        }
+        req.then(() => {
+          t.card("id", "desc").then((card) => {
+            t.member("username").then((member) => {
+              fetch("https://itd-snb.totobirdcreations.workers.dev/post?user=" + member["username"] + "&action=" + action + "&card=" + card["id"] + "&archive=" + archive + "&moveToTodo=" + moveToTodo + "&thread=" + (/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(card["desc"])[1], {
+                method  : "POST",
+                headers : {}
+              }).then((resp) => {
+                t.closePopup();
+              });
+            });
+          });
+        });
+      }
+      document.getElementById("btn-accept"     ).onclick = () => {clicked("accepted"             , false , true  , false );}
+      document.getElementById("btn-reject"     ).onclick = () => {clicked("rejected"             , true  , false , false );}
+      document.getElementById("btn-duplicate"  ).onclick = () => {clicked("marked as duplicate"  , true  , false , false );}
+      document.getElementById("btn-bad-format" ).onclick = () => {clicked("marked as bad format" , true  , false , false );}
+      document.getElementById("btn-reopen"     ).onclick = () => {clicked("reopened"             , false , false , true  );}
+    </script>
+  </body>
+</html>
