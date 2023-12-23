@@ -37,6 +37,7 @@
           buttons[i].removeAttribute("disabled");
         }}
       }
+      
       t.render(() => {
         t.card("desc").then((data) => {
           if ((/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(data["desc"]) !== null) {
@@ -54,6 +55,7 @@
           }
         });
       });
+      
       function clicked(action, archive, moveToTodo, removeCardTag) {
         setDisabled(true);
         var req;
