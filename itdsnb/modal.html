@@ -37,7 +37,9 @@
           buttons[i].removeAttribute("disabled");
         }}
       }
+      alert("DEBUG");
       t.card("desc").then((data) => {
+        alert(data["desc"]);
         if ((/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(data["desc"]) !== null) {
           t.get("card", "shared", "itdsnb_handled").then((value) => {
             if (value === undefined) {
