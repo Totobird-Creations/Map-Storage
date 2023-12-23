@@ -61,7 +61,6 @@
           }
         });
       }
-      t.render(() => update());
       
       function clicked(action, archive, moveToTodo, removeCardTag) {
         setDisabled(true);
@@ -87,6 +86,9 @@
       document.getElementById("btn-duplicate"  ).onclick = () => {clicked("marked as duplicate"  , true  , false , false );}
       document.getElementById("btn-bad-format" ).onclick = () => {clicked("marked as bad format" , true  , false , false );}
       document.getElementById("btn-reopen"     ).onclick = () => {clicked("reopened"             , false , false , true  );}
+
+      t.render(() => update());
+      
     </script>
   </body>
 </html>
