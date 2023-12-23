@@ -81,7 +81,7 @@
               fetch("https://itd-snb.totobirdcreations.workers.dev/post?user=" + member["username"] + "&action=" + action + "&card=" + card["id"] + "&archive=" + archive + "&moveToTodo=" + moveToTodo + "&thread=" + (/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(card["desc"])[1], {
                 method  : "POST",
                 headers : {}
-              });
+              }).then(() => update());
             });
           });
         });
