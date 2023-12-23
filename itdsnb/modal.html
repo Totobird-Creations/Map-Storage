@@ -41,7 +41,7 @@
         alert("B");
         t.card("desc").then((data) => {
           alert(data["desc"]);
-          if ((/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(data["desc"]) !== null) {
+          if ((/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(data["desc"]) !== null) {
             t.get("card", "shared", "itdsnb_handled").then((value) => {
               if (value === undefined) {
                 setDisabled(false);
@@ -67,7 +67,7 @@
         req.then(() => {
           t.card("id", "desc").then((card) => {
             t.member("username").then((member) => {
-              fetch("https://itd-snb.totobirdcreations.workers.dev/post?user=" + member["username"] + "&action=" + action + "&card=" + card["id"] + "&archive=" + archive + "&moveToTodo=" + moveToTodo + "&thread=" + (/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(card["desc"])[1], {
+              fetch("https://itd-snb.totobirdcreations.workers.dev/post?user=" + member["username"] + "&action=" + action + "&card=" + card["id"] + "&archive=" + archive + "&moveToTodo=" + moveToTodo + "&thread=" + (/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(card["desc"])[1], {
                 method  : "POST",
                 headers : {}
               }).then((resp) => {
