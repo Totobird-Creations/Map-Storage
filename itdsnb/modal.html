@@ -38,7 +38,7 @@
         }}
       }
       
-      t.render(() => {
+      function update() {
         setDisabled(true);
         var buttons = document.getElementsByClassName("btn-invert");
         for (var i = 0; i < buttons.length; i++) {
@@ -60,7 +60,8 @@
             });
           }
         });
-      });
+      }
+      t.render(() => update());
       
       function clicked(action, archive, moveToTodo, removeCardTag) {
         setDisabled(true);
