@@ -39,10 +39,16 @@
       }
       
       t.render(() => {
+        setDisabled(true);
+        var buttons = document.getElementsByClassName("btn-invert");
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].setAttribute("disabled", "disabled");
+        }
         t.card("desc").then((data) => {
           if ((/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(data["desc"]) !== null) {
             t.get("card", "shared", "itdsnb_handled").then((value) => {
               if (value === undefined) {
+                document.getElementById("info").innerHTML = "";
                 setDisabled(false);
               } else {
                 document.getElementById("info").innerHTML = "This thread has been <strong>" + value + "</strong>";
@@ -70,8 +76,6 @@
               fetch("https://itd-snb.totobirdcreations.workers.dev/post?user=" + member["username"] + "&action=" + action + "&card=" + card["id"] + "&archive=" + archive + "&moveToTodo=" + moveToTodo + "&thread=" + (/\*\*Link\*\*: \⛓ \[https:\/\/discord.com\/channels\/1175888672894234715\/(\d+)]/g).exec(card["desc"])[1], {
                 method  : "POST",
                 headers : {}
-              }).then((resp) => {
-                t.closePopup();
               });
             });
           });
