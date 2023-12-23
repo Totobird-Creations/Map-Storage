@@ -28,7 +28,6 @@
     <button disabled class="btn-invert" id="btn-reopen">Reopen</button>
     <p><br></p>
     <script>
-      alert("A");
       const t = window.TrelloPowerUp.iframe();
       function setDisabled(disabled) {
         var buttons = document.getElementsByClassName("btn-normal");
@@ -38,22 +37,24 @@
           buttons[i].removeAttribute("disabled");
         }}
       }
-      alert("B");
-      t.card("desc").then((data) => {
-        alert(data["desc"]);
-        if ((/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(data["desc"]) !== null) {
-          t.get("card", "shared", "itdsnb_handled").then((value) => {
-            if (value === undefined) {
-              setDisabled(false);
-            } else {
-              document.getElementById("info").innerHTML = "This thread has been <strong>" + value + "</strong>";
-              var buttons = document.getElementsByClassName("btn-invert");
-              for (var i = 0; i < buttons.length; i++) {
-                buttons[i].removeAttribute("disabled");
+      t.render(() => {
+        alert("B");
+        t.card("desc").then((data) => {
+          alert(data["desc"]);
+          if ((/\\*\\*Link\\*\\*: \\⛓ \\[https:\\/\\/discord.com\\/channels\\/1175888672894234715\\/(\\d+)]/g).exec(data["desc"]) !== null) {
+            t.get("card", "shared", "itdsnb_handled").then((value) => {
+              if (value === undefined) {
+                setDisabled(false);
+              } else {
+                document.getElementById("info").innerHTML = "This thread has been <strong>" + value + "</strong>";
+                var buttons = document.getElementsByClassName("btn-invert");
+                for (var i = 0; i < buttons.length; i++) {
+                  buttons[i].removeAttribute("disabled");
+                }
               }
-            }
-          });
-        }
+            });
+          }
+        });
       });
       function clicked(action, archive, moveToTodo, removeCardTag) {
         setDisabled(true);
