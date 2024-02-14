@@ -213,8 +213,9 @@
 
             <table id="item_entries">
 
-                <tr slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa id-badge" label="ID"   type="text" required nbt_path='PublicBukkitValues."hypercube:id"'                       ></tr>
-                <tr slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa tag"      label="Name" type="text" required nbt_path='display.Name'                      nbt_type="NbtSUCName" ></tr>
+                <tr                slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa id-badge" label="ID"     type="text"  required nbt_path='PublicBukkitValues."hypercube:id"'                       ></tr>
+                <tr                slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa tag"      label="Name"   type="text"  required nbt_path='display.Name'                      nbt_type="NbtSUCName" ></tr>
+                <tr id="ie_colour" slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa palette"  label="Colour" type="color" required                                                                    ></tr>
 
                 <tr                            slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa hourglass-half" label="Cooldown"  label_unit="ticks"  type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:cooldown"'  nbt_type="NbtDouble"       ></tr>
                 <tr                            slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa stopwatch"      label="Overclock" label_unit="of 100" type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:overclock"' nbt_type="NbtDouble"       ></tr>
@@ -305,7 +306,7 @@
 
                 // Specific use cases.
                 class NbtSUCName {constructor(text) {this.text = text;}
-                    toJSON() {return "\"{\\\"italic\\\":false,\\\"text\\\":\\\"" + this.text.replaceAll("\\", "\\\\\\\\").replaceAll("\"", "\\\\\\\"") + "\\\"}\"";}
+                    toJSON() {return "\"{\\\"italic\\\":false,\\\"color\\\":\\\"" + $("#item_entries tr#ie_colour td input").val() + "\\\",\\\"text\\\":\\\"" + this.text.replaceAll("\\", "\\\\\\\\").replaceAll("\"", "\\\\\\\"") + "\\\"}\"";}
                 }
                 class NbtSUCEphemeral {constructor(value) {this.value = value;}
                     toJSON() {if ($("#item_entries tr#ie_ephemeral td input").prop("checked")) {return "1.0d";} else {return null;}}
@@ -400,7 +401,7 @@
                         data.put("Charged", new NbtByte(1));
                         data.put("ChargedProjectiles", NbtList.from([NbtCompound.from({id : new NbtString("minecraft:arrow"), Count : new NbtByte(1)})]));
                     }
-                    data.put("PublicBukkitValues", NbtCompound.from({slot : new NbtString(current_slot_type)}));
+                    data.put("PublicBukkitValues", NbtCompound.from({"\"hypercube:slot\"" : new NbtString(current_slot_type)}));
 
                     $("#item_entries .slot_type_" + current_slot_type + " td input").each(function() {self = $(this);
                         var value = self.val();
