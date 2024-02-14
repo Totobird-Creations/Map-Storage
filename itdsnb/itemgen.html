@@ -70,6 +70,39 @@
                 font-size : 9pt;
                 font-weight : normal;
             }
+            #item_entries tr th .help {
+                margin-left : 8px;
+                color : #1f1f1f;
+                display : inline-block;
+                padding : 2px;
+            }
+            #item_entries tr th .help span {
+                visibility : hidden;
+                opacity : 0;
+                background-color : #cfcfcf;
+                position : absolute;
+                z-index : 1;
+                transition : opacity 0.1s, visibility 0.1s;
+                margin-left : -20px;
+                margin-top : 14px;
+                margin-right : 24px;
+                padding : 4px;
+                border-radius : 4px;
+                font-weight : normal;
+            }
+            #item_entries tr th .help:hover span {
+                visibility : visible;
+                opacity : 1;
+            }
+            #item_entries tr th .help span::before {
+                content : "";
+                position : absolute;
+                top : -16px;
+                left : 6px;
+                border-width : 8px;
+                border-style : solid;
+                border-color : transparent transparent #cfcfcf transparent;
+            }
 
             #output_label {
                 font-weight : bold;
@@ -84,7 +117,7 @@
                 opacity : 0;
                 visibility : hidden;
                 position : fixed;
-                z-index : 1;
+                z-index : 2;
                 left : 0;
                 right : 0;
                 width : 100%;
@@ -184,10 +217,12 @@
                 <tr slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa tag"      label="Name" type="text" required nbt_path='display.Name'                      nbt_type="NbtSUCName" ></tr>
 
                 <tr                            slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa hourglass-half" label="Cooldown"  label_unit="ticks"  type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:cooldown"'  nbt_type="NbtDouble"       ></tr>
-                <tr                            slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa hourglass-half" label="Overclock" label_unit="of 100" type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:overclock"' nbt_type="NbtDouble"       ></tr>
-                <tr          id="ie_ephemeral" slot_types="weapon_melee ability_keybind ability_passive"               icon="fa house-crack"    label="Ephemeral"                     type="checkbox"                 nbt_path='PublicBukkitValues."hypercube:ephemeral"' nbt_type="NbtSUCEphemeral" ></tr>
-                <tr disabled                   slot_types="weapon_ranged"                                              icon="fa house-crack"    label="Ephemeral"                     type="checkbox"></tr>
-                <tr          id="ie_stacking"  slot_types="ability_passive"                                            icon="fa layer-group"    label="Stacking"                      type="checkbox"                 nbt_path='PublicBukkitValues."hypercube:stacking"'  nbt_type="NbtSUCStacking"  ></tr>
+                <tr                            slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa stopwatch"      label="Overclock" label_unit="of 100" type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:overclock"' nbt_type="NbtDouble"       ></tr>
+                <tr          id="ie_ephemeral" slot_types="weapon_melee ability_keybind ability_passive"               icon="fa house-crack"    label="Ephemeral"                     type="checkbox"                 nbt_path='PublicBukkitValues."hypercube:ephemeral"' nbt_type="NbtSUCEphemeral" desc="Destroy this item on usage."></tr>
+                <tr disabled                   slot_types="weapon_ranged"                                              icon="fa house-crack"    label="Ephemeral"                     type="checkbox"                                                                                                desc="Destroy this item on usage."></tr>
+                <tr          id="ie_stacking"  slot_types="ability_passive"                                            icon="fa layer-group"    label="Stacking"                      type="checkbox"                 nbt_path='PublicBukkitValues."hypercube:stacking"'  nbt_type="NbtSUCStacking"  desc="If enabled, all passives of the same type share a single cooldown. If disabled, they each have their own cooldown."></tr>
+
+                <tr id="ie_automatic" slot_types="weapon_ranged" icon="fa group-arrows-rotate" label="Automatic" type="checkbox" nbt_path='PublicBukkitValues."hypercube:automatic"' nbt_type="NbtSUCAutomatic" desc="If enabled, holding right click will continue to fire shots continuously. If disabled, each shot must be triggered manually."></tr>
 
                 <tr slot_types="weapon_melee weapon_ranged" icon="fa arrow-up-9-1" label="Damage"    type="number" placeholder="5"    nbt_path='PublicBukkitValues."hypercube:damage"'    nbt_type="NbtDouble"></tr>
                 <tr slot_types="weapon_melee"               icon="fa bullseye"     label="Range"     type="number" placeholder="3.75" nbt_path='PublicBukkitValues."hypercube:range"'     nbt_type="NbtDouble"></tr>
@@ -198,15 +233,15 @@
                 <tr disabled slot_types="weapon_ranged" icon="fa burst"             label="Bullet Knockback"                                  type="number" placeholder="Unavailable"></tr>
                 <tr disabled slot_types="weapon_ranged" icon="fa explosion"         label="Bullet Pierce"                                     type="number" placeholder="Unavailable"></tr>
                 <tr disabled slot_types="weapon_ranged" icon="fa arrow-down"        label="Bullet Gravity"                                    type="number" placeholder="Unavailable"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa ellipsis-vertical" label="Bullets"                  label_unit="per shot"    type="number" placeholder="1"           nbt_path='PublicBukkitValues."hypercube:bullets_per_shot"' nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa ellipsis-vertical" label="Shot Spread"              label_unit="normal dist" type="number" placeholder="0.015625"    nbt_path='PublicBukkitValues."hypercube:shot_spread"'      nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa rotate-left"       label="Shot Recoil"              label_unit="degrees"     type="number" placeholder="0.1"         nbt_path='PublicBukkitValues."hypercube:shot_recoil"'      nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis X"       label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_oaxis_x"'     nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis Y"       label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_oaxis_y"'     nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis Z"       label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_oaxis_z"'     nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Forward"  label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_odir_z"'      nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Upward"   label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_odir_y"'      nbt_type="NbtDouble"></tr>
-                <tr          slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Sideways" label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_odir_x"'      nbt_type="NbtDouble"></tr>
+                <tr          slot_types="weapon_ranged" icon="fa ellipsis-vertical" label="Bullets"                   label_unit="per shot"    type="number" placeholder="1"           nbt_path='PublicBukkitValues."hypercube:bullets_per_shot"' nbt_type="NbtDouble" desc="Number of bullets fired in a single shot."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa ellipsis-vertical" label="Shot Spread"               label_unit="normal dist" type="number" placeholder="0.015625"    nbt_path='PublicBukkitValues."hypercube:shot_spread"'      nbt_type="NbtDouble" desc="How inaccurate each bullet is."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa rotate-left"       label="Shot Recoil"               label_unit="degrees"     type="number" placeholder="0.1"         nbt_path='PublicBukkitValues."hypercube:shot_recoil"'      nbt_type="NbtDouble"></tr>
+                <tr          slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis X"        label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_oaxis_x"'     nbt_type="NbtDouble" desc="Changes the location where bullets are fired from.<br />Shifts the location on the <strong>world X axis</strong>.<br />The origin is the player's eye location."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis Y"        label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_oaxis_y"'     nbt_type="NbtDouble" desc="Changes the location where bullets are fired from.<br />Shifts the location on the <strong>world Y axis</strong>.<br />The origin is the player's eye location."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis Z"        label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_oaxis_z"'     nbt_type="NbtDouble" desc="Changes the location where bullets are fired from.<br />Shifts the location on the <strong>world Z axis</strong>.<br />The origin is the player's eye location."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Forward"   label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_odir_z"'      nbt_type="NbtDouble" desc="Changes the location where bullets are fired from.<br />Shifts the location <strong>forward relative to the player eye</strong> location.<br />The origin is the player's eye location."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Upward"    label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_odir_y"'      nbt_type="NbtDouble" desc="Changes the location where bullets are fired from.<br />Shifts the location <strong>upward relative to the player eye</strong> location.<br />The origin is the player's eye location."></tr>
+                <tr          slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Rightward" label_unit="blocks"      type="number" placeholder="0"           nbt_path='PublicBukkitValues."hypercube:shot_odir_x"'      nbt_type="NbtDouble" desc="Changes the location where bullets are fired from.<br />Shifts the location <strong>rightward relative to the player eye</strong> location.<br />The origin is the player's eye location."></tr>
 
             </table>
 
@@ -278,6 +313,9 @@
                 class NbtSUCStacking {constructor(value) {this.value = value;}
                     toJSON() {if ($("#item_entries tr#ie_stacking td input").prop("checked")) {return "1.0d";} else {return null;}}
                 }
+                class NbtSUCAutomatic {constructor(value) {this.value = value;}
+                    toJSON() {if ($("#item_entries tr#ie_automatic td input").prop("checked")) {return "1.0d";} else {return null;}}
+                }
 
             </script>
             <script>
@@ -333,10 +371,16 @@
                         type_desc = " nbt_path='" + nbt_path +"' nbt_type=\"" + nbt_type + "\"";
                     }
 
+                    const desc     = self_.attr("desc");
+                    var   desc_tag = "";
+                    if (desc != undefined) {
+                        desc_tag = "<div class=\"help\"><i class=\"fa-xs fa-regular fa-circle-question\"></i><span>" + desc + "</span></div>";
+                    }
+
                     var self = $(
                         `<tr hidden` + id_tag + ` class="` + classes.join(" ") + `">
                             <td><i class="` + icon_group + `-solid ` + icon_group + `-` + icon_name + `"></i></td>
-                            <th class="` + disabled_tag + `">` + self_.attr("label") + required_tag + unit_tag + `</th>
+                            <th class="` + disabled_tag + `">` + self_.attr("label") + required_tag + unit_tag + desc_tag + `</th>
                             <td><input` + disabled_tag + ` type="` + self_.attr("type") + `" ` + required +  ` placeholder="` + placeholder + `"` + type_desc + ` /></td>
                         </tr>`
                     );
