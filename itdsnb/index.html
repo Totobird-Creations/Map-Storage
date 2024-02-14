@@ -1,0 +1,404 @@
+<html>
+    <head>
+        <script src="https://kit.fontawesome.com/8bf57498b2.js" crossorigin="anonymous"></script>
+        <style>
+
+            * {padding : 0; margin : 0; font-size : 12pt; text-align : left;}
+            #main {padding : 24px;}
+            h1 {
+                padding-bottom : 16px;
+                font-weight : bolder;
+                font-size : 16pt;
+            }
+
+            #slot_types {
+                display : flex;
+                flex-direction : row;
+                gap : 24px;
+                width : 100%;
+            }
+            #slot_types button {
+                display : block;
+                flex-grow : 1;
+                border : none;
+                padding : 4px;
+                background-color : #dfdfdf;
+                border-radius : 4px;
+                font-weight : bold;
+
+                transition-duration : 0.125s;
+            }
+            #slot_types button:enabled:hover {
+                background-color : #cfcfcf;
+            }
+            #slot_types button:enabled:active {
+                background-color : #afafaf;
+            }
+            #slot_types button.current_slot_type {
+                background-color : #afafaf;
+                box-shadow : inset 0px 0px 0px 2px #7f7f7f;
+            }
+            #slot_types #item_load {
+                display : relative;
+                flex-grow : 0.125;
+            }
+
+            #item_entries {border : none;}
+            #item_entries tr {border : none;}
+            #item_entries tr th, #item_entries tr td {
+                border : none;
+                padding-bottom : 4px;
+            }
+            #item_entries tr td:first-child {
+                text-align : center;
+                width : 32px;
+            }
+            #item_entries tr th {
+                padding-right : 16px;
+            }
+            #item_entries tr td input[type=number]::-webkit-inner-spin-button {
+                opacity : 1;
+            }
+
+            #item_entries tr th .required { color : #ff0000; }
+            #item_entries tr th .unit {
+                color : #5f5f5f;
+                font-size : 9pt;
+                font-weight : normal;
+            }
+
+            #output_label {
+                font-weight : bold;
+            }
+            #output {
+                width : 100%;
+                height : 128px;
+                word-break : break-all;
+            }
+
+            #load_modal {
+                opacity : 0;
+                visibility : hidden;
+                position : fixed;
+                z-index : 1;
+                left : 0;
+                right : 0;
+                width : 100%;
+                height : 100%;
+                background-color : #0000007f;
+                transition : opacity 0.1s, visibility 0.1s;
+            }
+            #load_modal.enabled {
+                opacity : 1;
+                visibility : visible;
+                transition : opacity 0.1s, visibility 0.1s;
+            }
+            #load_modal #load_modal_h {
+                margin : auto;
+                width : 50%;
+            }
+            #load_modal #load_modal_v {
+                margin : 0;
+                position : absolute;
+                top : 50%;
+                transform : translateY(-50%);
+                background-color : #ffffffdf;
+                border-radius : 4px;
+                width : 50%;
+            }
+            #load_modal #load_modal_main {
+                padding : 24px;
+            }
+            #load_modal #load_modal_main textarea {
+                width : 100%;
+                height : 128px;
+                text-align : center;
+                padding : 50px;
+            }
+            #load_modal #load_modal_main button {
+                margin-top : 24px;
+                padding : 2px;
+                width : 100%;
+                text-align : center;
+                font-weight : bold;
+            }
+            #load_modal #close {
+                float : right;
+                font-size : 24pt;
+                cursor : pointer;
+                margin-right : 10px;
+            }
+
+            .code {
+                background-color : #bfbfbf;
+                border-radius : 4px;
+                padding : 2px;
+                font-family : monospace;
+            }
+            textarea {
+                resize : none;
+                padding : 2px;
+            }
+
+        </style>
+    </head>
+    <body>
+
+
+        <div id="load_modal">
+            <div id="load_modal_h"><div id="load_modal_v">
+                <span id="close">&times;</span>
+                <div id="load_modal_main">
+                    <h1>Import Item</h1>
+                    <p>Use the <span class="code">/i nbt</span> command and paste the output here:</p>
+                    <textarea disabled>Unavailable</textarea>
+                    <button disabled>Unavailable</button>
+                </div>
+            </div></div>
+        </div>
+
+
+        <div id="main">
+            <h1>ITD Item Editor</h1>
+
+
+            <div id="slot_types">
+                <button class="slot_type_button" slot_type_button=weapon_melee><i class="fa-solid fa-slash"></i> Melee Weapon</button>
+                <button class="slot_type_button" slot_type_button=weapon_ranged><i class="fa-solid fa-gun"></i> Ranged Weapon</button>
+                <button class="slot_type_button" slot_type_button=ability_keybind><i class="fa-solid fa-keyboard"></i> Keybind Ability</button>
+                <button class="slot_type_button" slot_type_button=ability_passive><i class="fa-solid fa-eye"></i> Passive Ability</button>
+                <button id="item_load"><i class="fa-solid fa-upload"></i> Load</button>
+            </div>
+
+
+            <br />
+
+
+            <table id="item_entries">
+
+                <tr slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa id-badge" label="ID"   type="text" required nbt_path='PublicBukkitValues."hypercube:id"'                       ></tr>
+                <tr slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa tag"      label="Name" type="text" required nbt_path='display.Name'                      nbt_type="NbtSUCName" ></tr>
+
+                <tr                   slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa hourglass-half" label="Cooldown"  label_unit="ticks"  type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:cooldown"'  nbt_type="NbtDouble"       ></tr>
+                <tr                   slot_types="weapon_melee weapon_ranged ability_keybind ability_passive" icon="fa hourglass-half" label="Overclock" label_unit="of 100" type="number"   placeholder="0" nbt_path='PublicBukkitValues."hypercube:overclock"' nbt_type="NbtDouble"       ></tr>
+                <tr id="ie_ephemeral" slot_types="weapon_melee ability_keybind ability_passive"               icon="fa house-crack"    label="Ephemeral"                     type="checkbox"                 nbt_path='PublicBukkitValues."hypercube:ephemeral"' nbt_type="NbtSUCEphemeral" ></tr>
+                <tr id="ie_stacking"  slot_types="ability_passive"                                            icon="fa layer-group"    label="Stacking"                      type="checkbox"                 nbt_path='PublicBukkitValues."hypercube:stacking"'  nbt_type="NbtSUCStacking"  ></tr>
+
+                <tr slot_types="weapon_melee"               icon="fa bullseye"     label="Range"     type="number" placeholder="3.75" nbt_path='PublicBukkitValues."hypercube:range"'     nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_melee weapon_ranged" icon="fa arrow-up-9-1" label="Damage"    type="number" placeholder="5"    nbt_path='PublicBukkitValues."hypercube:damage"'    nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_melee"               icon="fa wave-square"  label="Knockback" type="number" placeholder="1"    nbt_path='PublicBukkitValues."hypercube:knockback"' nbt_type="NbtDouble"></tr>
+
+                <tr slot_types="weapon_ranged" icon="fa bullseye"          label="Bullet Range"                                      type="number" placeholder="25"       nbt_path='PublicBukkitValues."hypercube:bullet_range"'     nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa wind"              label="Bullet Speed"                                      type="number" placeholder="2.5"      nbt_path='PublicBukkitValues."hypercube:bullet_speed"'     nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa ellipsis-vertical" label="Bullets"                  label_unit="per shot"    type="number" placeholder="1"        nbt_path='PublicBukkitValues."hypercube:bullets_per_shot"' nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa ellipsis-vertical" label="Shot Spread"              label_unit="normal dist" type="number" placeholder="0.015625" nbt_path='PublicBukkitValues."hypercube:shot_spread"'      nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa rotate-left"       label="Shot Recoil"              label_unit="degrees"     type="number" placeholder="0.1"      nbt_path='PublicBukkitValues."hypercube:shot_recoil"'      nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis X"       label_unit="blocks"      type="number" placeholder="0"        nbt_path='PublicBukkitValues."hypercube:shot_oaxis_x"'     nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis Y"       label_unit="blocks"      type="number" placeholder="0"        nbt_path='PublicBukkitValues."hypercube:shot_oaxis_y"'     nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa border-all"        label="Shot Offset Axis Z"       label_unit="blocks"      type="number" placeholder="0"        nbt_path='PublicBukkitValues."hypercube:shot_oaxis_z"'     nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Forward"  label_unit="blocks"      type="number" placeholder="0"        nbt_path='PublicBukkitValues."hypercube:shot_odir_z"'      nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Upward"   label_unit="blocks"      type="number" placeholder="0"        nbt_path='PublicBukkitValues."hypercube:shot_odir_y"'      nbt_type="NbtDouble"></tr>
+                <tr slot_types="weapon_ranged" icon="fa border-none"       label="Shot Offset Dir Sideways" label_unit="blocks"      type="number" placeholder="0"        nbt_path='PublicBukkitValues."hypercube:shot_odir_x"'      nbt_type="NbtDouble"></tr>
+
+            </table>
+
+
+            <br />
+
+
+            <p id="output_label">Give command using <a href="https://modrinth.com/mod/clientcommands" target="_blank" rel="noreferrer noopener">ClientCommands</a>:</p>
+            <textarea id="output" readonly></textarea>
+
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+            <script>
+
+                class NbtCompound {constructor() {this.entries = {};}
+                    static from(entries) {var nbt = new NbtCompound(); nbt.entries = entries; return nbt;}
+                    toJSON() {
+                        var keys = Object.keys(this.entries);
+                        var strings = [];
+                        for (var i = 0; i < keys.length; i++) {const key = keys[i];
+                            const json = this.entries[key].toJSON();
+                            if (json != undefined) {
+                                strings.push(key + ":" + json);
+                            }
+                        }
+                        return "{" + strings.join(",") + "}"}
+                    put(key, value) {this.entries[key] = value;}
+                    get(key) {return this.entries[key];}
+                    getOrPut(key) {if (key in this.entries) {return this.entries[key];} else {
+                        const nbt = new NbtCompound();
+                        this.entries[key] = nbt;
+                        return nbt;
+                    }}
+                }
+                class NbtList {constructor() {this.entries = {};}
+                    static from(entries) {var nbt = new NbtList(); nbt.entries = entries; return nbt;}
+                    toJSON() {
+                        var strings = [];
+                        for (var i = 0; i < this.entries.length; i++) {;
+                            const json = this.entries[u].toJSON();
+                            if (json != undefined) {
+                                strings.push(json);
+                            }
+                        }
+                        return "[" + strings.join(",") + "]"}
+                    add(value) {this.entries.push(value);}
+                    get(index) {return this.entries[index];}
+                }
+                class NbtByte {constructor(value) {this.value = value;}
+                    toJSON() {return this.value + "b";}
+                }
+                class NbtInt {constructor(value) {this.value = value;}
+                    toJSON() {return this.value;}
+                }
+                class NbtDouble {constructor(value) {this.value = value;}
+                    toJSON() {return this.value + "d";}
+                }
+                class NbtString {constructor(value) {this.value = value;}
+                    toJSON() {return "\"" + this.value + "\"";}
+                }
+
+                // Specific use cases.
+                class NbtSUCName {constructor(text) {this.text = text;}
+                    toJSON() {return "\"{\\\"italic\\\":false,\\\"text\\\":\\\"" + this.text.replaceAll("\\", "\\\\\\\\").replaceAll("\"", "\\\\\\\"") + "\\\"}\"";}
+                }
+                class NbtSUCEphemeral {constructor(value) {this.value = value;}
+                    toJSON() {if ($("#item_entries tr#ie_ephemeral td input").prop("checked")) {return "1.0d";} else {return null;}}
+                }
+                class NbtSUCStacking {constructor(value) {this.value = value;}
+                    toJSON() {if ($("#item_entries tr#ie_stacking td input").prop("checked")) {return "1.0d";} else {return null;}}
+                }
+
+            </script>
+            <script>
+
+                $("#item_entries tr").each(function() {self_ = $(this);
+
+                    const id     = self_.attr("id");
+                    var   id_tag = "";
+                    if (id != undefined) {
+                        id_tag = " id=\"" + id + "\""
+                    }
+
+                    var classes    = [];
+                    var slot_types = self_.attr("slot_types").split(" ");
+                    for (var i = 0; i < slot_types.length; i++) {classes.push("slot_type_" + slot_types[i]);}
+
+                    var icon_name = self_.attr("icon").split(" ");
+                    const icon_group = icon_name.shift();
+                    icon_name = icon_name.join(" ");
+
+                    var required     = self_.attr("required");
+                    var required_tag = "";
+                    if (required == undefined) {
+                        required = "";
+                    } else {
+                        required_tag = "<span class=\"required\">*</span>";
+                    }
+
+                    const unit     = self_.attr("label_unit");
+                    var   unit_tag = "";
+                    if (unit != undefined) {
+                        unit_tag = "<span class=\"unit\"> (" + unit + ")</span>"
+                    }
+
+                    var placeholder = self_.attr("placeholder");
+                    if (placeholder == undefined) {
+                        placeholder = "";
+                    }
+
+                    var type_desc = "";
+                    const nbt_path = self_.attr("nbt_path");
+                    if (nbt_path != undefined) {
+                        var nbt_type = self_.attr("nbt_type");
+                        if (nbt_type == undefined) {
+                            nbt_type = "NbtString"
+                        }
+                        type_desc = " nbt_path='" + nbt_path +"' nbt_type=\"" + nbt_type + "\"";
+                    }
+
+                    var self = $(
+                        `<tr hidden` + id_tag + ` class="` + classes.join(" ") + `">
+                            <td><i class="` + icon_group + `-solid ` + icon_group + `-` + icon_name + `"></i></td>
+                            <th>` + self_.attr("label") + required_tag + unit_tag + `</th>
+                            <td><input type="` + self_.attr("type") + `" ` + required +  ` placeholder="` + placeholder + `"` + type_desc + ` /></td>
+                        </tr>`
+                    );
+                    self_.replaceWith(self);
+
+                });
+
+
+                var current_slot_type = "";
+
+                function update() {
+                    if (current_slot_type == "") {return;}
+                    const material = {"weapon_melee" : "stone_sword", "weapon_ranged" : "crossbow", "ability_keybind" : "gold_axe", "ability_passive" : "gold_hoe"}[current_slot_type];
+
+                    var data = NbtCompound.from({damage : new NbtInt(0), HideFlags : new NbtInt(-1)});
+                    if (current_slot_type == "ranged") {
+                        data.put("Charged", new NbtByte(1));
+                        data.put("ChargedProjectiles", NbtList.from([NbtCompound.from({id : new NbtString("minecraft:arrow"), Count : new NbtByte(1)})]));
+                    }
+                    data.put("PublicBukkitValues", NbtCompound.from({slot : new NbtString(current_slot_type)}));
+
+                    $("#item_entries .slot_type_" + current_slot_type + " td input").each(function() {self = $(this);
+                        var value = self.val();
+                        if (self.attr("required") != undefined || value.replace(" ", "").length > 0) {
+                            var path = self.attr("nbt_path");
+                            if (path != undefined) {
+                                path = path.split(".");
+                                last = path.pop();
+                                var nbt = data; for (var i = 0; i < path.length; i++) {nbt = nbt.getOrPut(path[i]);}
+                                nbt.put(last, eval("new " + self.attr("nbt_type") + "(\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\")"));
+                            }
+                        }
+                    });
+
+                    $("#output").text("/cive " + material + data.toJSON());
+                }
+
+                $("#slot_types #item_load").click(function() {
+                    $("#load_modal").addClass("enabled");
+                });
+                $("#load_modal #close").click(function() {
+                    $("#load_modal").removeClass("enabled");
+                });
+
+                const slot_types = $("#slot_types .slot_type_button").map(function() { return $(this).attr("slot_type_button"); });
+                $("#slot_types .slot_type_button").click(function() {
+                    $("#slot_types .slot_type_button").removeClass("current_slot_type");
+                    $(this).addClass("current_slot_type");
+                    const target_slot_type = $(this).attr("slot_type_button");
+                    for (var i = 0; i < slot_types.length; i++) {
+                        const slot_type = slot_types[i];
+                        var entry = $("#item_entries .slot_type_" + slot_type);
+                        entry.hide();
+                    }
+                    var entry = $("#item_entries .slot_type_" + target_slot_type);
+                    entry.show();
+                    current_slot_type = target_slot_type;
+                    update();
+                });
+
+                for (var i = 0; i < slot_types.length; i++) {
+                    const slot_type = slot_types[i];
+                    $("#item_entries .slot_type_" + slot_type).change(function() {
+                        update();
+                    });
+                }
+
+                $("#output").click(function() {
+                    $(this).select();
+                });
+
+                $(document).ready(function() {
+                    $("#slot_types .slot_type_button:first-child").click();
+                })
+
+            </script>
+        </div>
+    </body>
+</html>
