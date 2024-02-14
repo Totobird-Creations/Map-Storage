@@ -246,7 +246,7 @@
                     toJSON() {
                         var strings = [];
                         for (var i = 0; i < this.entries.length; i++) {;
-                            const json = this.entries[u].toJSON();
+                            const json = this.entries[i].toJSON();
                             if (json != undefined) {
                                 strings.push(json);
                             }
@@ -352,7 +352,7 @@
                     const material = {"weapon_melee" : "stone_sword", "weapon_ranged" : "crossbow", "ability_keybind" : "gold_axe", "ability_passive" : "gold_hoe"}[current_slot_type];
 
                     var data = NbtCompound.from({damage : new NbtInt(0), HideFlags : new NbtInt(-1)});
-                    if (current_slot_type == "ranged") {
+                    if (current_slot_type == "weapon_ranged") {
                         data.put("Charged", new NbtByte(1));
                         data.put("ChargedProjectiles", NbtList.from([NbtCompound.from({id : new NbtString("minecraft:arrow"), Count : new NbtByte(1)})]));
                     }
